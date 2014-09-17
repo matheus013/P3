@@ -4,22 +4,29 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import Trabalhadores.*;
 
 public class Recursos {
-
-	ArrayList<Funcionario> funcionario = new ArrayList<Funcionario>();
-	ArrayList<String> logs = new ArrayList<String>();
+	private int position = 0;
+	private ArrayList<Funcionario> funcionario = new ArrayList<Funcionario>();
+	private ArrayList<ArrayList<Funcionario>> stats = new ArrayList<ArrayList<Funcionario>>();
+	private ArrayList<String> logs = new ArrayList<String>();
 	private SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy");
-	Date data;
-	Scanner scan = new Scanner(System.in);
-	int id = 0;
-	boolean loop = true;
-	double salario;
+	private Date data;
+	private Scanner scan = new Scanner(System.in);
+	private int id = 0;
+	private boolean loop = true;
+	@SuppressWarnings("unused")
+	private double salario;
 
 	public Recursos(Date data) {
 		super();
 		this.data = data;
+	}
+
+	public void set(int id, Funcionario obj) {
+		funcionario.set(id, obj);
 	}
 
 	public void add() {
@@ -72,6 +79,7 @@ public class Recursos {
 				tipo = scan.nextInt();
 			}
 		}
+		stats.add(funcionario);
 	}
 
 	public void remove() {
@@ -106,7 +114,7 @@ public class Recursos {
 			}
 			System.out.println("\n");
 		}
-
+		stats.add(funcionario);
 	}
 
 	public void print() {
@@ -133,7 +141,7 @@ public class Recursos {
 				}
 			}
 		}
-
+		stats.add(funcionario);
 	}
 
 	public void folha(Date data) {
@@ -164,30 +172,64 @@ public class Recursos {
 		} else {
 			System.out.println("Total a pagar: " + total);
 		}
+		stats.add(funcionario);
 	}
 
 	public void update(int id) {
+		
+		System.out.println("1 - Alterar tipo");
+		System.out.println("2 - Alterar nome");
+		System.out.println("3 - Sindicato");
+		System.out.println("4 - Alterar endereço");
+		System.out.println("5 - Alterar Taxa sindical");
+		int comando = scan.nextInt();
+		if (comando == 1) {
+			if (funcionario.get(id) instanceof Assalariado) {
+				Assalariado aux = (Assalariado) funcionario.get(id);
+				funcionario.set(id, aux);
+				System.out.println("1 - Horista");
+				System.out.println("2 - Comissionado");
+				int com = scan.nextInt();
+				if (com == 1){					
+					Horista auxH = new Horista(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), 0, 0);
+					funcionario.set(aux.getId(), auxH);
+					
+				}else if (com == 2){
+					Comissionado auxC = new Comissionado(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), data, 0, 0);
+				}
 
-		if (funcionario.get(id) instanceof Assalariado) {
-			Assalariado aux = (Assalariado) funcionario.get(id);
-			System.out.println("Tipo: Assalariado");
-			System.out.println(aux.toString());
-			funcionario.set(id, aux);
+				
+			} else if (funcionario.get(id) instanceof Horista) {
+				Horista aux = (Horista) funcionario.get(id);
+				funcionario.set(id, aux);
+				System.out.println("1 - Assalariado");
+				System.out.println("2 - Comissionado");
+				int com = scan.nextInt();
+				if (com == 1){					
+					Horista auxH = new Horista(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), 0, 0);
+					funcionario.set(aux.getId(), auxH);
+					
+				}else if (com == 2){
+					Comissionado auxC = new Comissionado(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), data, 0, 0);
+				}
 
-		} else if (funcionario.get(id) instanceof Horista) {
-			Horista aux = (Horista) funcionario.get(id);
-			System.out.println("Tipo: Horista");
-			System.out.println(aux.toString());
+			} else if (funcionario.get(id) instanceof Comissionado) {
+				Comissionado aux = (Comissionado) funcionario.get(id);
+				funcionario.set(id, aux);
+				System.out.println("1 - Horista");
+				System.out.println("2 - Assalariado");
+				int com = scan.nextInt();
+				if (com == 1){					
+					Horista auxH = new Horista(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), 0, 0);
+					funcionario.set(aux.getId(), auxH);
+					
+				}else if (com == 2){
+					Comissionado auxC = new Comissionado(aux.getId(), aux.getTaxa(), aux.getNome(), aux.getEndereco(), data, 0, 0);
+				}
 
-			funcionario.set(id, aux);
-		} else if (funcionario.get(id) instanceof Comissionado) {
-			Comissionado aux = (Comissionado) funcionario.get(id);
-			System.out.println("Tipo: Comissionado");
-			System.out.println(aux.toString());
-
-			funcionario.set(id, aux);
-
+			}
 		}
+		stats.add(funcionario);
 
 	}
 
@@ -195,6 +237,7 @@ public class Recursos {
 
 		logs.add("Nome: " + funcionario.get(idFuncionario).getNome()
 				+ "\nValor vendido: " + valor);
+		stats.add(funcionario);
 
 	}
 
@@ -202,4 +245,18 @@ public class Recursos {
 		return funcionario;
 	}
 
+	public void pontoVenda() {
+		System.out.println("Entre com codigo de acessso do funcionario: ");
+		int idF = scan.nextInt();
+		System.out.println("Entre com valor da venda");
+		double valor = scan.nextDouble();
+		if (funcionario.get(idF) instanceof Comissionado) {
+			Comissionado aux = (Comissionado) funcionario.get(idF);
+			aux.addVendas(valor);
+			funcionario.set(idF, aux);
+
+		}
+		stats.add(funcionario);
+	}
+	
 }

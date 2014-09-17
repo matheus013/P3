@@ -3,23 +3,27 @@ package Recursos;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+
 import Trabalhadores.Funcionario;
 
 public class Expediente {
-	ArrayList<String> inWork =  new ArrayList<String>();
-	Date data = new Date();
-	Hashtable horas = new Hashtable();
+	private ArrayList<String> inWork =  new ArrayList<String>();
+	private Date data = new Date();
+	@SuppressWarnings("rawtypes")
+	private Hashtable horas = new Hashtable();
 
 	public Expediente() {
 		// TODO Auto-generated constructor stub
 	}
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void checkIn(Funcionario funcionario){
 		horas.put(funcionario.getNome(), data.getHours());
 		inWork.add(funcionario.getNome());
 		
 	}
+	@SuppressWarnings("deprecation")
 	public int checkOut(String funcionario){
-		int horasTrabalhadas = (int) horas.get(funcionario) - data.getHours();
+		int horasTrabalhadas = (int) horas.get(funcionario) - (int) data.getHours();
 		horas.remove(funcionario);
 		inWork.remove(funcionario);
 		if(horasTrabalhadas < 0){horasTrabalhadas *= -1;}

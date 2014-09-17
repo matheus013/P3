@@ -3,7 +3,7 @@ package Trabalhadores;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Comissionado extends Funcionario {
+public class Comissionado extends Assalariado {
 	private Date data;
 	private SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy");
 	private double comissao;
@@ -11,7 +11,7 @@ public class Comissionado extends Funcionario {
 
 	public Comissionado(int id, double taxa, String nome, String endereco,
 			Date data, double comissao, double vendas) {
-		super(id, taxa, nome, 0, endereco);
+		super(id,taxa,nome,endereco,0,data);
 		// TODO Auto-generated constructor stub
 		this.data = data;
 		this.comissao = comissao;
